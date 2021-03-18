@@ -1,6 +1,4 @@
 # Sudoku
-simple sudoku game
-
 Creating a sudoku game
 
 WORK IN PROGRESS
