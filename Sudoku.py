@@ -5,7 +5,7 @@ import time
 
 pygame.init()
 
-WIDTH, HEIGHT = 450, 450
+WIDTH, HEIGHT = 450, 500
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sudoku")
@@ -36,9 +36,6 @@ def blank_board():
     for row in range(9):
         for column in range(9):
             board[row][column] = " "
-
-            
-    print(board)
 
 
 def choix_case(x, x1, y, y1):
@@ -121,7 +118,15 @@ def verif_row(row):
 
 
 def verif_all(row, collumn):
-    print(board)
+    print("SUDOKU: \n",board[0])        
+    print("\n",board[1])
+    print("\n",board[2])
+    print("\n",board[3])
+    print("\n",board[4])
+    print("\n",board[5])
+    print("\n",board[6])
+    print("\n",board[7])
+    print("\n",board[8])
     if verif_column(collumn) and verif_row(row) and verif_case(row, collumn):
         return True
     else:
@@ -142,8 +147,8 @@ def trouver_case(row,column):
 
     return False
 
-def make_board():
-
+def make_full_board():
+    
     case_depart = -1
     
     column = 0
@@ -172,6 +177,60 @@ def make_board():
         row += 1
 
 
+def make_board():
+
+    for row in range(9):
+        nbr_alea = random.randint(0,8)
+        board[row][nbr_alea] = " "
+        nbr_alea = random.randint(0,8)
+        board[row][nbr_alea] = " "
+
+    for column in range(9):
+        nbr_alea = random.randint(0,8)
+        board[nbr_alea][column] = " "
+        nbr_alea = random.randint(0,8)
+        board[nbr_alea][column] = " "
+
+def draw_button():
+
+    posy = 30
+    button_height = HEIGHT-50/2-35/2
+
+    for nombre in range(10):
+        pygame.draw.rect(WIN, BLACK, [posy, button_height, 35,35],2)
+        posy += 40
+    
+
+    draw_button_nombre(button_height)
+
+    pygame.display.update()
+
+def draw_button_nombre(button_height):
+
+    posy = 44
+
+    for nombre in range(1,10):
+        text = font.render(str(nombre), 1, BLACK)
+        WIN.blit(text, (posy, button_height+10))
+        posy += 40
+
+    pygame.draw.line(WIN, BLACK, (390, button_height),(posy+21,button_height+35),2)
+    pygame.draw.line(WIN, BLACK, (424, button_height),(posy-14,button_height+34),2)
+    
+
+def draw_waiting():
+    WIN.fill(WHITE)
+    text = font.render("LOADING...",1,BLACK)
+    text_width = text.get_width()
+    text_height = text.get_height()
+    WIN.blit(text, (WIDTH/2-text_width/2,HEIGHT/2-text_height/2))
+    text = font.render("mading the sudoku",1,BLACK)
+    text_width = text.get_width()
+    text_height = text.get_height()
+    WIN.blit(text, (WIDTH/2-text_width/2,HEIGHT/2-text_height/2+20))
+
+    pygame.display.update()
+
 def draw_board():
     compteur = 0
 
@@ -199,11 +258,10 @@ def draw_board():
 
     for row in range(9):
         for column in range(9):
-            text = font.render(str(board[row][column]), 1, (0, 0, 0))
+            text = font.render(str(board[row][column]), 1, BLACK)
             text_width = text.get_width()
             text_height = text.get_height()
-            WIN.blit(
-                text, (pos_numero[column]/2-text_width/2, pos_numero[row]/2-text_height/2))
+            WIN.blit(text, (pos_numero[column]/2-text_width/2, pos_numero[row]/2-text_height/2))
 
 
 def draw_window():
@@ -211,6 +269,7 @@ def draw_window():
     WIN.fill(WHITE)
 
     draw_board()
+    draw_button()
 
     pygame.display.update()
 
@@ -218,21 +277,58 @@ def draw_window():
 def main():
     clock = pygame.time.Clock()
     run = True
-
+    button_height = HEIGHT-50/2-35/2
     while run:
         clock.tick(FPS)
-
+        mouse = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Boutton 1
+                if 30 < mouse[0] < 30+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "1"
+                # Boutton 2
+                if 70 < mouse[0] < 70+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "2"
+                # Boutton 3
+                if 110 < mouse[0] < 110+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "3"
+                # Boutton 4
+                if 150 < mouse[0] < 150+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "4"
+                # Boutton 5
+                if 190 < mouse[0] < 190+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "5"
+                # Boutton 6
+                if 230 < mouse[0] < 230+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "6"
+                # Boutton 7
+                if 270 < mouse[0] < 270+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "7"
+                # Boutton 8
+                if 310 < mouse[0] < 310+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "8"
+                # Boutton 9
+                if 350 < mouse[0] < 350+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = "9"
+                # Boutton X
+                if 390 < mouse[0] < 390+35 and button_height < mouse[1] < button_height + 35:
+                    nbr_selec = " "
+                pass
+
 
         draw_window()
 
     pygame.quit()
 
 
+draw_waiting()
 blank_board()
+#make_full_board()
 make_board()
+
 
 if __name__ == "__main__":
     main()
