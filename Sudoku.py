@@ -205,10 +205,10 @@ def make_board():
 
 def draw_button():
 
-    posy = 30
+    posy = 10
     button_height = HEIGHT-50/2-35/2
 
-    for nombre in range(10):
+    for nombre in range(11):
         pygame.draw.rect(WIN, BLACK, [posy, button_height, 35,35],2)
         posy += 40
     
@@ -219,15 +219,19 @@ def draw_button():
 
 def draw_button_nombre(button_height):
 
-    posy = 44
+    posy = 24
 
     for nombre in range(1,10):
         text = font.render(str(nombre), 1, BLACK)
         WIN.blit(text, (posy, button_height+10))
         posy += 40
 
-    pygame.draw.line(WIN, BLACK, (390, button_height),(posy+21,button_height+35),2)
-    pygame.draw.line(WIN, BLACK, (424, button_height),(posy-14,button_height+34),2)
+    pygame.draw.line(WIN, BLACK, (370, button_height),(posy+21,button_height+35),2)
+    pygame.draw.line(WIN, BLACK, (405, button_height),(posy-14,button_height+34),2)
+
+    text = font.render("C", 1,BLACK)
+    text_width = text.get_width()
+    WIN.blit(text, (427 - text_width/2, button_height+10))
     
 
 def draw_waiting():
@@ -303,6 +307,36 @@ def put_number(mouse, nbr_selec,board_user,board_user_modif):
 
         row += 1
 
+def verify_win(board,board_user_modif):
+    if board == board_user_modif:
+        return True
+    else:
+        return False
+
+def draw_win():
+
+    WIN.fill(WHITE)
+    text = font.render("WON",1,BLACK)
+    text_width = text.get_width()
+    text_height = text.get_height()
+    WIN.blit(text, (WIDTH/2-text_width/2,HEIGHT/2-text_height/2))
+
+    pygame.display.update()
+
+def correct(board,board_user,board_user_modif):
+
+    true_cell = 0
+
+    for row in range(9):
+        for column in range(9):
+            if board_user[row][column] == " " and board_user_modif[row][column] != " ":
+                if board_user_modif[row][column] == board[row][column]:
+                    true_cell += 1
+                else:
+                    board_user_modif[row][column] = board[row][column]
+
+    print("Number of true cell: ", true_cell)
+
 def main(board_user, board_user_modif):
     clock = pygame.time.Clock()
     run = True
@@ -317,41 +351,55 @@ def main(board_user, board_user_modif):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Boutton 1
-                if 30 < mouse[0] < 30+35 and button_height < mouse[1] < button_height + 35:
+                if 10 < mouse[0] < 10+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 1
+                    print("1")
                 # Boutton 2
-                if 70 < mouse[0] < 70+35 and button_height < mouse[1] < button_height + 35:
+                if 50 < mouse[0] < 50+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 2
+                    print("2")
                 # Boutton 3
-                if 110 < mouse[0] < 110+35 and button_height < mouse[1] < button_height + 35:
+                if 90 < mouse[0] < 90+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 3
+                    print("3")
                 # Boutton 4
-                if 150 < mouse[0] < 150+35 and button_height < mouse[1] < button_height + 35:
+                if 130 < mouse[0] < 130+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 4
+                    print("4")
                 # Boutton 5
-                if 190 < mouse[0] < 190+35 and button_height < mouse[1] < button_height + 35:
+                if 170 < mouse[0] < 170+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 5
+                    print("5")
                 # Boutton 6
-                if 230 < mouse[0] < 230+35 and button_height < mouse[1] < button_height + 35:
+                if 210 < mouse[0] < 210+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 6
+                    print("6")
                 # Boutton 7
-                if 270 < mouse[0] < 270+35 and button_height < mouse[1] < button_height + 35:
+                if 250 < mouse[0] < 250+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 7
+                    print("7")
                 # Boutton 8
-                if 310 < mouse[0] < 310+35 and button_height < mouse[1] < button_height + 35:
+                if 290 < mouse[0] < 290+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 8
+                    print("8")
                 # Boutton 9
-                if 350 < mouse[0] < 350+35 and button_height < mouse[1] < button_height + 35:
+                if 330 < mouse[0] < 330+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = 9
+                    print("9")
                 # Boutton X
-                if 390 < mouse[0] < 390+35 and button_height < mouse[1] < button_height + 35:
+                if 370 < mouse[0] < 370+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = " "
+                    print("espace")
+                if 410 < mouse[0] < 410+35 and button_height < mouse[1] < button_height + 35:
+                    correct(board,board_user, board_user_modif)
                 pass
 
                 put_number(mouse,nbr_selec,board_user, board_user_modif)
 
-
-        draw_window(board_user_modif)
+        if verify_win(board,board_user_modif):
+            draw_win()
+        else:
+            draw_window(board_user_modif)
 
     pygame.quit()
 
