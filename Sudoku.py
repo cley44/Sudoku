@@ -31,7 +31,6 @@ board = ([5, 3, 4, 6, 7, 8, 9, 1, 2],
 
 pos_numero = []
 
-
 def blank_board():
     for row in range(9):
         for column in range(9):
@@ -179,17 +178,30 @@ def make_full_board():
 
 def make_board():
 
+    board_user = (board[0].copy(),board[1].copy(),board[2].copy(),board[3].copy(),board[4].copy(),board[5].copy(),board[6].copy(),board[7].copy(),board[8].copy())
+    board_user_modif = (board[0].copy(),board[1].copy(),board[2].copy(),board[3].copy(),board[4].copy(),board[5].copy(),board[6].copy(),board[7].copy(),board[8].copy())
+
+    print(board_user)
+
     for row in range(9):
         nbr_alea = random.randint(0,8)
-        board[row][nbr_alea] = " "
+        board_user[row][nbr_alea] = " "
+        board_user_modif[row][nbr_alea] = " "
         nbr_alea = random.randint(0,8)
-        board[row][nbr_alea] = " "
+        board_user[row][nbr_alea] = " "
+        board_user_modif[row][nbr_alea] = " "
 
     for column in range(9):
         nbr_alea = random.randint(0,8)
-        board[nbr_alea][column] = " "
+        board_user[nbr_alea][column] = " "
+        board_user_modif[nbr_alea][column] = " "
         nbr_alea = random.randint(0,8)
-        board[nbr_alea][column] = " "
+        board_user[nbr_alea][column] = " "
+        board_user_modif[nbr_alea][column] = " "
+
+    return board_user,board_user_modif
+
+
 
 def draw_button():
 
@@ -224,14 +236,14 @@ def draw_waiting():
     text_width = text.get_width()
     text_height = text.get_height()
     WIN.blit(text, (WIDTH/2-text_width/2,HEIGHT/2-text_height/2))
-    text = font.render("mading the sudoku",1,BLACK)
+    text = font.render("making the sudoku",1,BLACK)
     text_width = text.get_width()
     text_height = text.get_height()
     WIN.blit(text, (WIDTH/2-text_width/2,HEIGHT/2-text_height/2+20))
 
     pygame.display.update()
 
-def draw_board():
+def draw_board(board_user_modif):
     compteur = 0
 
     for posx in range(50, HEIGHT, 50):
@@ -258,26 +270,44 @@ def draw_board():
 
     for row in range(9):
         for column in range(9):
-            text = font.render(str(board[row][column]), 1, BLACK)
+            text = font.render(str(board_user_modif[row][column]), 1, BLACK)
             text_width = text.get_width()
             text_height = text.get_height()
             WIN.blit(text, (pos_numero[column]/2-text_width/2, pos_numero[row]/2-text_height/2))
 
 
-def draw_window():
+def draw_window(board_user_modif):
 
     WIN.fill(WHITE)
 
-    draw_board()
+    draw_board(board_user_modif)
     draw_button()
 
     pygame.display.update()
 
 
-def main():
+def put_number(mouse, nbr_selec,board_user,board_user_modif):
+
+    row = 0
+    column = 0
+
+    for posy in range(0,HEIGHT-50,50):
+        column = 0
+        for posx in range(0,HEIGHT-50,50):
+
+            if posx < mouse[0] < posx +50 and posy < mouse[1] < posy + 50:
+                if board_user[row][column] == " ":
+                    board_user_modif[row][column] = nbr_selec
+        
+            column +=1
+
+        row += 1
+
+def main(board_user, board_user_modif):
     clock = pygame.time.Clock()
     run = True
     button_height = HEIGHT-50/2-35/2
+    nbr_selec = " "
     while run:
         clock.tick(FPS)
         mouse = pygame.mouse.get_pos()
@@ -288,47 +318,49 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Boutton 1
                 if 30 < mouse[0] < 30+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "1"
+                    nbr_selec = 1
                 # Boutton 2
                 if 70 < mouse[0] < 70+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "2"
+                    nbr_selec = 2
                 # Boutton 3
                 if 110 < mouse[0] < 110+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "3"
+                    nbr_selec = 3
                 # Boutton 4
                 if 150 < mouse[0] < 150+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "4"
+                    nbr_selec = 4
                 # Boutton 5
                 if 190 < mouse[0] < 190+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "5"
+                    nbr_selec = 5
                 # Boutton 6
                 if 230 < mouse[0] < 230+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "6"
+                    nbr_selec = 6
                 # Boutton 7
                 if 270 < mouse[0] < 270+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "7"
+                    nbr_selec = 7
                 # Boutton 8
                 if 310 < mouse[0] < 310+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "8"
+                    nbr_selec = 8
                 # Boutton 9
                 if 350 < mouse[0] < 350+35 and button_height < mouse[1] < button_height + 35:
-                    nbr_selec = "9"
+                    nbr_selec = 9
                 # Boutton X
                 if 390 < mouse[0] < 390+35 and button_height < mouse[1] < button_height + 35:
                     nbr_selec = " "
                 pass
 
+                put_number(mouse,nbr_selec,board_user, board_user_modif)
 
-        draw_window()
+
+        draw_window(board_user_modif)
 
     pygame.quit()
 
 
 draw_waiting()
 blank_board()
-#make_full_board()
-make_board()
+make_full_board()
+board_user, board_user_modif = make_board()
 
 
 if __name__ == "__main__":
-    main()
+    main(board_user, board_user_modif)
