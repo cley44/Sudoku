@@ -1,7 +1,7 @@
 import pygame
 import random
 import time
-
+import threading
 
 pygame.init()
 
@@ -30,6 +30,7 @@ board = ([5, 3, 4, 6, 7, 8, 9, 1, 2],
          [3, 4, 5, 2, 8, 6, 1, 7, 9])
 
 pos_numero = []
+pos_incorrect_color = []
 
 def blank_board():
     for row in range(9):
@@ -280,12 +281,13 @@ def draw_board(board_user_modif):
             WIN.blit(text, (pos_numero[column]/2-text_width/2, pos_numero[row]/2-text_height/2))
 
 
-def draw_window(board_user_modif):
+def draw_window(board_user_modif,nbr_selec):
 
     WIN.fill(WHITE)
 
     draw_board(board_user_modif)
     draw_button()
+    draw_select_number(nbr_selec)
 
     pygame.display.update()
 
@@ -316,7 +318,7 @@ def verify_win(board,board_user_modif):
 def draw_win():
 
     WIN.fill(WHITE)
-    text = font.render("WON",1,BLACK)
+    text = font.render("YOU WON !",1,BLACK)
     text_width = text.get_width()
     text_height = text.get_height()
     WIN.blit(text, (WIDTH/2-text_width/2,HEIGHT/2-text_height/2))
@@ -333,9 +335,52 @@ def correct(board,board_user,board_user_modif):
                 if board_user_modif[row][column] == board[row][column]:
                     true_cell += 1
                 else:
+                    t = threading.Thread(None, draw_incorrect_color, None,(board_user_modif, row, column))
+                    t.start()
                     board_user_modif[row][column] = board[row][column]
+                    t.join()
+                    time.sleep(0.01)
 
     print("Number of true cell: ", true_cell)
+
+def draw_incorrect_color(board_user_modif, row, column):
+
+    for numero in range(0, 450, 50):
+
+        pos_incorrect_color.append(numero)
+
+    for x in range(255,0,-1):
+        WIN.fill(WHITE)
+        draw_board(board_user_modif)
+
+        s = pygame.Surface((50,50))
+        s.set_alpha(x)
+        s.fill((255,0,0))
+        WIN.blit(s, (pos_incorrect_color[column],pos_incorrect_color[row]))
+        pygame.display.update()
+        time.sleep(0.001)
+
+    pygame.display.update()
+
+def draw_select_number(nbr_selec):
+
+
+    posy = 10
+    button_height = HEIGHT-50/2-35/2
+
+    tab_posy = []
+
+    for nombre in range(11):
+        tab_posy.append(posy)
+        posy += 40
+    
+    if nbr_selec == " ":
+        nbr_selec = 10
+
+    pygame.draw.rect(WIN, BLACK, [tab_posy[nbr_selec-1], button_height, 35,35],3)
+
+    pygame.display.update()
+
 
 def main(board_user, board_user_modif):
     clock = pygame.time.Clock()
@@ -392,14 +437,16 @@ def main(board_user, board_user_modif):
                     print("espace")
                 if 410 < mouse[0] < 410+35 and button_height < mouse[1] < button_height + 35:
                     correct(board,board_user, board_user_modif)
+                    nbr_selec = 11
                 pass
-
+                
+                
                 put_number(mouse,nbr_selec,board_user, board_user_modif)
 
         if verify_win(board,board_user_modif):
             draw_win()
         else:
-            draw_window(board_user_modif)
+            draw_window(board_user_modif, nbr_selec)
 
     pygame.quit()
 
