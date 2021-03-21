@@ -1,7 +1,6 @@
 # Sudoku
 Creating a sudoku game
 
-WORK IN PROGRESS
-
-Right now it only create a randomize sudoku board and show it.
-It take some seconds before showing it so don't worry if you see a blackscreen at the start
+Create a random sudoku board.
+After that you can play a sudoku game, press the C button to correct your board.
+If your board is complete end true then you will see the WIN screen.
